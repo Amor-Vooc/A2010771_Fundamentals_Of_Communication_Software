@@ -1,0 +1,51 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.34928.147
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Fundamentals_Of_Communication_Software", "Fundamentals_Of_Communication_Software\Fundamentals_Of_Communication_Software.vcxproj", "{5540D810-AEC2-4A68-85B1-977A09D3C162}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "task_1_SignalAnalyze", "task_1_SignalAnalyze\task_1_SignalAnalyze.vcxproj", "{3D047599-0D2D-467E-B671-5AD03567951F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "task_2_Clustering_Algorithms", "task_2_Clustering_Algorithms\task_2_Clustering_Algorithms.vcxproj", "{CA6E9B82-021C-492B-9733-B58318E9DCA9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5540D810-AEC2-4A68-85B1-977A09D3C162}.Debug|x64.ActiveCfg = Debug|x64
+		{5540D810-AEC2-4A68-85B1-977A09D3C162}.Debug|x64.Build.0 = Debug|x64
+		{5540D810-AEC2-4A68-85B1-977A09D3C162}.Debug|x86.ActiveCfg = Debug|Win32
+		{5540D810-AEC2-4A68-85B1-977A09D3C162}.Debug|x86.Build.0 = Debug|Win32
+		{5540D810-AEC2-4A68-85B1-977A09D3C162}.Release|x64.ActiveCfg = Release|x64
+		{5540D810-AEC2-4A68-85B1-977A09D3C162}.Release|x64.Build.0 = Release|x64
+		{5540D810-AEC2-4A68-85B1-977A09D3C162}.Release|x86.ActiveCfg = Release|Win32
+		{5540D810-AEC2-4A68-85B1-977A09D3C162}.Release|x86.Build.0 = Release|Win32
+		{3D047599-0D2D-467E-B671-5AD03567951F}.Debug|x64.ActiveCfg = Debug|x64
+		{3D047599-0D2D-467E-B671-5AD03567951F}.Debug|x64.Build.0 = Debug|x64
+		{3D047599-0D2D-467E-B671-5AD03567951F}.Debug|x86.ActiveCfg = Debug|Win32
+		{3D047599-0D2D-467E-B671-5AD03567951F}.Debug|x86.Build.0 = Debug|Win32
+		{3D047599-0D2D-467E-B671-5AD03567951F}.Release|x64.ActiveCfg = Release|x64
+		{3D047599-0D2D-467E-B671-5AD03567951F}.Release|x64.Build.0 = Release|x64
+		{3D047599-0D2D-467E-B671-5AD03567951F}.Release|x86.ActiveCfg = Release|Win32
+		{3D047599-0D2D-467E-B671-5AD03567951F}.Release|x86.Build.0 = Release|Win32
+		{CA6E9B82-021C-492B-9733-B58318E9DCA9}.Debug|x64.ActiveCfg = Debug|x64
+		{CA6E9B82-021C-492B-9733-B58318E9DCA9}.Debug|x64.Build.0 = Debug|x64
+		{CA6E9B82-021C-492B-9733-B58318E9DCA9}.Debug|x86.ActiveCfg = Debug|Win32
+		{CA6E9B82-021C-492B-9733-B58318E9DCA9}.Debug|x86.Build.0 = Debug|Win32
+		{CA6E9B82-021C-492B-9733-B58318E9DCA9}.Release|x64.ActiveCfg = Release|x64
+		{CA6E9B82-021C-492B-9733-B58318E9DCA9}.Release|x64.Build.0 = Release|x64
+		{CA6E9B82-021C-492B-9733-B58318E9DCA9}.Release|x86.ActiveCfg = Release|Win32
+		{CA6E9B82-021C-492B-9733-B58318E9DCA9}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DC63A082-9136-4DD6-84E6-A85B8A8EF7A7}
+	EndGlobalSection
+EndGlobal
