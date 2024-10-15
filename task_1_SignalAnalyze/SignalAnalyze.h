@@ -1,21 +1,21 @@
 #ifndef SIGNAL_ANALYZE_H
 #define SIGNAL_ANALYZE_H
-#define MaxNumOfASigFiles 12
-#define MaxNumOfSort 6
+
 #include <string>
 #include <array>
+#include <fstream>
+#include <vector>
 
-// 常量定义
-//constexpr unsigned int MaxNumOfASigFiles = 12;
-constexpr unsigned int MaxNumOfDSigFiles = 3;
-constexpr unsigned int ASigFileNameOffset = 40;
-constexpr unsigned int DSigFileNameOffset = 0;
-constexpr unsigned int MaxLenOfASig = 30000;
-constexpr unsigned int MaxLenOfDSig = 4096;
-//constexpr unsigned int MaxNumOfSort = 6;
-
-// 命名空间用于组织相关函数和变量
 //namespace SignalAnalyze {
+
+    // 常量定义
+    constexpr unsigned int MaxNumOfASigFiles = 12;
+    constexpr unsigned int MaxNumOfSort = 6;
+    constexpr unsigned int MaxNumOfDSigFiles = 3;
+    constexpr unsigned int ASigFileNameOffset = 40;
+    constexpr unsigned int DSigFileNameOffset = 0;
+    constexpr unsigned int MaxLenOfASig = 30000;
+    constexpr unsigned int MaxLenOfDSig = 4096;
 
     // 常量字符串
     extern const std::string ActualSignalFileName;
@@ -23,12 +23,13 @@ constexpr unsigned int MaxLenOfDSig = 4096;
     extern const std::string FileExtension;
     extern const std::string WorkLoadEnvDir;
 
-    extern const unsigned int StartOfAsigFiles;
+    // 文件起始索引
+    extern const unsigned int StartOfASigFiles;
     extern const unsigned int StartOfDSigFiles;
 
     // 文件名数组
-    extern std::array<char, MaxNumOfASigFiles> ASigFileNames;
-    extern std::array<char, MaxNumOfDSigFiles> DSigFileNames;
+    extern std::array<std::string, MaxNumOfASigFiles> ASigFileNames;
+    extern std::array<std::string, MaxNumOfDSigFiles> DSigFileNames;
 
     // 信号数据数组
     extern std::array<std::array<float, MaxLenOfASig / 2>, MaxNumOfASigFiles> ASigData;
@@ -37,8 +38,8 @@ constexpr unsigned int MaxLenOfDSig = 4096;
 
     // 复数结构体
     struct ComplexNum {
-        double Re;
-        double Im;
+        double Re = 0.0;
+        double Im = 0.0;
     };
 
     // 实际信号信息结构体
@@ -89,36 +90,36 @@ constexpr unsigned int MaxLenOfDSig = 4096;
     /**
      * @brief 读取实际信号文件并计算其功率
      *
-     * @param aSigInfo 指向ASigInfo结构体的指针
+     * @param aSigInfo 参考实际信号信息结构体
      * @return int 成功返回0，失败返回-1
      */
-    int ReadASigFile(ASigInfo* aSigInfo);
+    int ReadASigFile(ASigInfo* _aSigInfo);
 
     /**
      * @brief 读取确定信号文件
      *
-     * @param dSigInfo 指向DSigInfo结构体的指针
+     * @param dSigInfo 参考确定信号信息结构体
      * @return int 成功返回0，失败返回-1
      */
-    int ReadDSigFile(DSigInfo* dSigInfo);
+    int ReadDSigFile(DSigInfo* _dSigInfo);
 
     /**
      * @brief 选择排序，找到最大功率值并排序
      *
-     * @param aSigInfo 指向ASigInfo结构体的指针
-     * @param dSigInfo 指向DSigInfo结构体的指针
-     * @param sortResult 排序结果数组，大小为 [2][MaxNumOfSort]
+     * @param aSigInfo 参考实际信号信息结构体
+     * @param dSigInfo 参考确定信号信息结构体
+     * @param sortResult 排序结果二维向量，大小为 [2][MaxNumOfASigFiles]
      * @return int 成功返回0，失败返回-1
      */
-    int SelectSort(ASigInfo* _aSigInfo, DSigInfo* _dSigInfo, double(*sortResult)[MaxNumOfASigFiles]);
+    int SelectSort(const ASigInfo& aSigInfo, const DSigInfo& dSigInfo, std::vector<std::vector<double>>& sortResult);
 
     /**
      * @brief 相关性检测
      *
      * @param aSigIndex 实际信号文件索引
-     * @param aSigInfo 指向ASigInfo结构体的指针
+     * @param aSigInfo 参考实际信号信息结构体
      * @param dSigIndex 确定信号文件索引
-     * @param dSigInfo 指向DSigInfo结构体的指针
+     * @param dSigInfo 参考确定信号信息结构体
      * @return int 成功返回0，失败返回-1
      */
     int CorrelationDetection(unsigned int aSigIndex, ASigInfo* _aSigInfo, unsigned int dSigIndex, DSigInfo* _dSigInfo);
