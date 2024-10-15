@@ -12,35 +12,35 @@
 #include "Message.h"
 
 
+ASigInfo aSigInfo = {};
 DSigInfo dSigInfo = {};
-SSigInfo sSigInfo = {};
-// SortResult[0][*] store index, [1][*] store data
-double SortResult[2][MaxNumOfDSigFiles] = { 0 };
+// SortResult[0][*] 存储索引，[1][*] 存储数据
+double SortResult[2][MaxNumOfASigFiles] = { 0 };
 
 // 函数声明
-void CorrelationDetectionPerDSig(unsigned int _dSigIndex);
+void CorrelationDetectionPerASig(unsigned int _aSigIndex);
 
 int main() {
     // 多线程检查文件可用性
+    std::thread LoadASigThread(ReadASigFile, &aSigInfo);
     std::thread LoadDSigThread(ReadDSigFile, &dSigInfo);
-    std::thread LoadSSigThread(ReadSSigFile, &sSigInfo);
 
+    LoadASigThread.join();
     LoadDSigThread.join();
-    LoadSSigThread.join();
 
-    SelectSort(&dSigInfo, &sSigInfo, SortResult);
+    SelectSort(&aSigInfo, &dSigInfo, SortResult);
 
     // 多线程检查相关性
     std::vector<std::thread> CorrelationDetectionThreads;
     CorrelationDetectionThreads.reserve(MaxNumOfSort);
 
     for (unsigned int index = 0; index < MaxNumOfSort; ++index) {
-        unsigned int dSigIndex = static_cast<unsigned int>(SortResult[0][index]) + DSigFileNameOffset;
+        unsigned int aSigIndex = static_cast<unsigned int>(SortResult[0][index]) + ASigFileNameOffset;
         try {
-            CorrelationDetectionThreads.emplace_back(CorrelationDetectionPerDSig, dSigIndex);
+            CorrelationDetectionThreads.emplace_back(CorrelationDetectionPerASig, aSigIndex);
         }
         catch (const std::system_error& e) {
-            std::cerr << ErrorMsg << " std::thread creation failed: " << e.what() << "\n";
+            std::cerr << ErrorMsg << " 创建线程失败: " << e.what() << "\n";
         }
         std::this_thread::sleep_for(std::chrono::nanoseconds(5)); // 等待5纳秒
     }
@@ -55,59 +55,60 @@ int main() {
 
     // 打印结果表头
     std::cout << "\n\033[47;30m"
-        << std::setw(9) << "No."
-        << std::setw(7) << "Data"
-        << std::setw(16) << "Sample"
-        << std::setw(20) << "Correlation"
-        << std::setw(13) << "Position"
+        << std::setw(9) << "编号"
+        << std::setw(7) << "数据"
+        << std::setw(16) << "样本"
+        << std::setw(17) << "相关性"
+        << std::setw(13) << "位置"
         << "\033[0m\n";
 
     // 打印每条数据的相关性结果
     for (unsigned int index = 0; index < MaxNumOfSort; ++index) {
-        unsigned int dSigIndex = static_cast<unsigned int>(SortResult[0][index]);
-        for (unsigned int sSigIndex = 0; sSigIndex < MaxNumOfSSigFiles; ++sSigIndex) {
-            std::cout << std::setw(8) << (index * 3 + sSigIndex + 1)
-                << std::setw(14) << GetFileFullPathSetDir("", DeterministicSignalFileName, dSigIndex + DSigFileNameOffset, FileExtension)
-                << std::setw(12) << GetFileFullPathSetDir("", SampleSignalFileName, sSigIndex + SSigFileNameOffset, FileExtension)
-                << "\t" << std::fixed << std::setprecision(2) << dSigInfo.PeakValue[dSigIndex][sSigIndex]
-                << "\t" << dSigInfo.PeakValueIndex[dSigIndex][sSigIndex] << "\n";
+        unsigned int aSigIndex = static_cast<unsigned int>(SortResult[0][index]);
+        for (unsigned int dSigIndex = 0; dSigIndex < MaxNumOfDSigFiles; ++dSigIndex) {
+            std::cout << std::setw(8) << (index * 3 + dSigIndex + 1)
+                << std::setw(14) << GetFileFullPathSetDir("", ActualSignalFileName, aSigIndex + ASigFileNameOffset, FileExtension)
+                << std::setw(12) << GetFileFullPathSetDir("", DeterministicSignalFileName, dSigIndex + DSigFileNameOffset, FileExtension)
+                << "\t" << std::fixed << std::setprecision(2) << aSigInfo.PeakValue[aSigIndex][dSigIndex]
+                << "\t" << aSigInfo.PeakValueIndex[aSigIndex][dSigIndex] << "\n";
         }
         std::this_thread::sleep_for(std::chrono::nanoseconds(5)); // 等待5纳秒
     }
 
     // 计算每个采样信号的最大相关性
-    double maxCorrelation[3][MaxNumOfSSigFiles];
+    double maxCorrelation[3][MaxNumOfDSigFiles];
     for (int i = 0; i < 3; ++i) {
-        for (unsigned int j = 0; j < MaxNumOfSSigFiles; ++j) {
+        for (unsigned int j = 0; j < MaxNumOfDSigFiles; ++j) {
             maxCorrelation[i][j] = -1.0;
         }
     }
 
     for (unsigned int index = 0; index < MaxNumOfSort; ++index) {
-        unsigned int dSigIndex = static_cast<unsigned int>(SortResult[0][index]);
-        for (unsigned int sSigIndex = 0; sSigIndex < MaxNumOfSSigFiles; ++sSigIndex) {
-            if (dSigInfo.PeakValue[dSigIndex][sSigIndex] > maxCorrelation[1][sSigIndex]) {
-                maxCorrelation[1][sSigIndex] = dSigInfo.PeakValue[dSigIndex][sSigIndex];
-                maxCorrelation[0][sSigIndex] = dSigIndex + DSigFileNameOffset;
-                maxCorrelation[2][sSigIndex] = sSigIndex + SSigFileNameOffset;
+        unsigned int aSigIndex = static_cast<unsigned int>(SortResult[0][index]);
+        for (unsigned int dSigIndex = 0; dSigIndex < MaxNumOfDSigFiles; ++dSigIndex) {
+            if (aSigInfo.PeakValue[aSigIndex][dSigIndex] > maxCorrelation[1][dSigIndex]) {
+                maxCorrelation[1][dSigIndex] = aSigInfo.PeakValue[aSigIndex][dSigIndex];
+                maxCorrelation[0][dSigIndex] = aSigIndex + ASigFileNameOffset;
+                maxCorrelation[2][dSigIndex] = dSigIndex + DSigFileNameOffset;
             }
         }
     }
 
     // 打印最大相关性结果
-    for (unsigned int sSigIndex = 0; sSigIndex < MaxNumOfSSigFiles; ++sSigIndex) {
-        std::cout << InformationMsg << "The max correlation exists between "
-            << GetFileFullPathSetDir("", DeterministicSignalFileName, static_cast<unsigned int>(maxCorrelation[0][sSigIndex]), FileExtension)
-            << " and "
-            << GetFileFullPathSetDir("", SampleSignalFileName, static_cast<unsigned int>(maxCorrelation[2][sSigIndex]), FileExtension)
-            << ".\n";
+    for (unsigned int dSigIndex = 0; dSigIndex < MaxNumOfDSigFiles; ++dSigIndex) {
+        std::cout << InformationMsg << " 最大相关性存在于 "
+            << GetFileFullPathSetDir("", ActualSignalFileName, static_cast<unsigned int>(maxCorrelation[0][dSigIndex]), FileExtension)
+            << " 和 "
+            << GetFileFullPathSetDir("", DeterministicSignalFileName, static_cast<unsigned int>(maxCorrelation[2][dSigIndex]), FileExtension)
+            << " 之间 "
+            << std::endl;
     }
 
-    std::cout << InformationMsg << "Save Correlation output at CorrelationResult_Data*_PSS*.csv\n";
+    std::cout << InformationMsg << "将相关性输出保存到 CorrelationResult_Data*_PSS*.csv\n";
 }
 
-void CorrelationDetectionPerDSig(unsigned int _dSigIndex) {
-    for (unsigned int _sSigIndex = 0 + SSigFileNameOffset; _sSigIndex < MaxNumOfSSigFiles + SSigFileNameOffset; ++_sSigIndex) {
-        CorrelationDetection(_dSigIndex, &dSigInfo, _sSigIndex, &sSigInfo);
+void CorrelationDetectionPerASig(unsigned int _aSigIndex) {
+    for (unsigned int _dSigIndex = 0 + DSigFileNameOffset; _dSigIndex < MaxNumOfDSigFiles + DSigFileNameOffset; ++_dSigIndex) {
+        CorrelationDetection(_aSigIndex, &aSigInfo, _dSigIndex, &dSigInfo);
     }
 }
