@@ -18,17 +18,11 @@
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Message.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="SignalAnalyze.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Message.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="SignalAnalyze.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -43,5 +37,6 @@
     <None Include="课程资料\重庆邮电大学实验报告.doc">
       <Filter>资源文件</Filter>
     </None>
+    <None Include="ImageGenerate.py" />
   </ItemGroup>
 </Project>

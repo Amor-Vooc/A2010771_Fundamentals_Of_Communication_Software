@@ -128,14 +128,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Message.cpp" />
     <ClCompile Include="SignalAnalyze.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Message.h" />
     <ClInclude Include="SignalAnalyze.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ImageGenerate.py" />
     <None Include="课程资料\180308204701120_第一次实验数据.rar" />
     <None Include="课程资料\通信软件基础B-移动通信中的算法问题.pptx" />
     <None Include="课程资料\重庆邮电大学实验报告.doc" />

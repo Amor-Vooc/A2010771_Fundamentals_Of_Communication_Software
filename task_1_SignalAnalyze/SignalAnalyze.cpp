@@ -8,11 +8,11 @@
 #include <string>
 #include <iomanip>
 #include "SignalAnalyze.h"
-#include "Message.h"
 
 // 定义全局变量
 ASigInfo aSigInfo;
 DSigInfo dSigInfo;
+std::string StartupParameter = "";
 
 // 常量定义
 const std::string ActualSignalFileName = "data";
@@ -126,10 +126,6 @@ int ReadDSigFile(DSigInfo* _dSigInfo) {
             continue;
         }
 
-        // 如果 DSigInfo 结构体中需要计算 PowerValue，可以在这里添加相关代码
-        // 例如：
-        // _dSigInfo->PowerValue[i] = 计算功率值;
-
         _dSigInfo->FileCanBeOpen[i] = true;
         currentFile.close();
     }
@@ -220,7 +216,10 @@ int CorrelationDetection(unsigned int aSigIndex, ASigInfo* _aSigInfo, unsigned i
 
     // 生成输出文件名
     std::string outputFileName = "CorrelationResult_Data" + std::to_string(aSigIndex) +
-        "_PSS" + std::to_string(dSigIndex) + ".csv";
+        "_PSS" + std::to_string(dSigIndex) + ".txt";
+
+    StartupParameter += " " + outputFileName; // 准备 Python 绘图的启动参数
+
     std::ofstream outputFile(outputFileName, std::ios::out);
     if (!outputFile.is_open()) {
         std::cout << WarningMsg << "创建失败 " << outputFileName << std::endl;

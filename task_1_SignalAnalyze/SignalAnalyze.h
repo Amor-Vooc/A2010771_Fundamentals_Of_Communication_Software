@@ -6,16 +6,22 @@
 #include <fstream>
 #include <vector>
 
+extern std::string StartupParameter;
+
 //namespace SignalAnalyze {
 
     // 常量定义
     constexpr unsigned int MaxNumOfASigFiles = 12;
     constexpr unsigned int MaxNumOfSort = 6;
     constexpr unsigned int MaxNumOfDSigFiles = 3;
-    constexpr unsigned int ASigFileNameOffset = 40;
+    constexpr unsigned int ASigFileNameOffset = 0;
     constexpr unsigned int DSigFileNameOffset = 0;
     constexpr unsigned int MaxLenOfASig = 30000;
     constexpr unsigned int MaxLenOfDSig = 4096;
+    const std::string ErrorMsg = "\033[31m[ERR]\033[0m\t";
+    const std::string InformationMsg = "\033[32m[INFO]\033[0m\t";
+    const std::string WarningMsg = "\033[33m[WARN]\033[0m\t";
+
 
     // 常量字符串
     extern const std::string ActualSignalFileName;

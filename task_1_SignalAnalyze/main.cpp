@@ -10,9 +10,7 @@
 #include <chrono>
 #include <future>
 #include "SignalAnalyze.h"
-#include "Message.h"
 
-// 使用命名空间以避免全局变量
 struct SignalData {
     ASigInfo aSigInfo = {};
     DSigInfo dSigInfo = {};
@@ -23,6 +21,8 @@ struct SignalData {
 
 // 函数声明
 void CorrelationDetectionPerASig(unsigned int aSigIndex, SignalData& signalData);
+void ImageGenerate();
+
 
 int main() {
     SignalData signalData;
@@ -101,7 +101,11 @@ int main() {
             << std::endl;
     }
 
-    std::cout << InformationMsg << "将相关性输出保存到 CorrelationResult_Data*_PSS*.csv\n";
+    std::cout << InformationMsg << "将相关性输出保存到 CorrelationResult_Data*_PSS*.txt\n";
+
+    ImageGenerate();
+
+    std::cout << InformationMsg << "相关性图形绘制完毕\n";
 
     return 0;
 }
@@ -110,4 +114,12 @@ void CorrelationDetectionPerASig(unsigned int aSigIndex, SignalData& signalData)
     for (unsigned int dSigIndex = 0; dSigIndex < MaxNumOfDSigFiles; ++dSigIndex) {
         CorrelationDetection(aSigIndex, &signalData.aSigInfo, dSigIndex + DSigFileNameOffset, &signalData.dSigInfo);
     }
+}
+
+void ImageGenerate() {
+    std::cout << InformationMsg << "开始绘制相关性图形" << std::endl;
+    StartupParameter = "py ImageGenerate.py" + StartupParameter;
+    const char* c_StartupParameter = StartupParameter.data();
+    // std::cout << c_StartupParameter << std::endl;
+    system(c_StartupParameter);
 }
