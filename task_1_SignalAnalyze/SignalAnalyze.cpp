@@ -18,7 +18,7 @@ std::string StartupParameter = "";
 const std::string ActualSignalFileName = "data";
 const std::string DeterministicSignalFileName = "PSS";
 const std::string FileExtension = ".txt";
-const std::string WorkLoadEnvDir = "D:/个人文件/作业/第三学期_大二上/通信软件基础/Fundamentals_Of_Communication_Software/task_1_SignalAnalyze/课程资料/第一次实验数据/"; //信号文件路径
+const std::string WorkLoadEnvDir = "./课程资料/第一次实验数据/"; //信号文件路径
 
 // 定义 SortResult 为二维向量，以匹配头文件中 SelectSort 的参数类型
 std::vector<std::vector<double>> SortResult(2, std::vector<double>(MaxNumOfASigFiles, 0.0));

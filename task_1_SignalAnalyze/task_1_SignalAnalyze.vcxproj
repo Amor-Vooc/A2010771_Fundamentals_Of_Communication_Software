@@ -24,6 +24,7 @@
     <ProjectGuid>{3d047599-0d2d-467e-b671-5ad03567951f}</ProjectGuid>
     <RootNamespace>task1SignalAnalyze</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>task_1_Signal_Analyze</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
