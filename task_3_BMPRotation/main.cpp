@@ -1,5 +1,5 @@
 #define _CRT_SECURE_NO_WARNINGS 1
-
+//2023211281-∂°Õ¨€√-BMP_Rotation
 #include "BMPOperation.h"
 #include <iostream>
 #include <vector>

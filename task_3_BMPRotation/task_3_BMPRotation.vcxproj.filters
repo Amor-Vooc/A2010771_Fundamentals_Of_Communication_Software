@@ -27,4 +27,25 @@
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="课程资料\Rotated.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="课程资料\Source.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="课程资料\调试视频.mp4">
+      <Filter>资源文件</Filter>
+    </Media>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="课程资料\通信软件基础b-4.0-图像处理中的算法问题_cfb2dbabcd27649fe611.pdf">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="课程资料\重庆邮电大学实验报告.doc">
+      <Filter>资源文件</Filter>
+    </None>
+  </ItemGroup>
 </Project>

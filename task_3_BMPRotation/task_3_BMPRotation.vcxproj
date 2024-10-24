@@ -134,6 +134,17 @@
   <ItemGroup>
     <ClInclude Include="BMPOperation.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="课程资料\Rotated.bmp" />
+    <Image Include="课程资料\Source.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="课程资料\调试视频.mp4" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="课程资料\通信软件基础b-4.0-图像处理中的算法问题_cfb2dbabcd27649fe611.pdf" />
+    <None Include="课程资料\重庆邮电大学实验报告.doc" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

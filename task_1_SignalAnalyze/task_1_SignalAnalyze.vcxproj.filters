@@ -39,4 +39,9 @@
     </None>
     <None Include="ImageGenerate.py" />
   </ItemGroup>
+  <ItemGroup>
+    <Media Include="课程资料\调试视频.mp4">
+      <Filter>资源文件</Filter>
+    </Media>
+  </ItemGroup>
 </Project>

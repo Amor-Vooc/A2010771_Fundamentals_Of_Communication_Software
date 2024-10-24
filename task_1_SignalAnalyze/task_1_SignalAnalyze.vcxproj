@@ -140,6 +140,9 @@
     <None Include="课程资料\通信软件基础B-移动通信中的算法问题.pptx" />
     <None Include="课程资料\重庆邮电大学实验报告.doc" />
   </ItemGroup>
+  <ItemGroup>
+    <Media Include="课程资料\调试视频.mp4" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
