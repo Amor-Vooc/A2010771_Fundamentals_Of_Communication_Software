@@ -6,6 +6,8 @@
 #include <thread>
 #include <algorithm>
 #include <csignal>
+#include <map>
+//2023211281-丁同勖-SOCKET_TCP_Server
 
 using namespace std;
 
@@ -25,6 +27,7 @@ private:
     void PrintError(const string& message);
 
     vector<SOCKET> clients; // 存储客户端套接字
+    map<SOCKET, string> clientUsernames; // 存储客户端用户名
     mutex clientsMutex; // 保护对客户端的访问
     SOCKET serverSocket;
     bool running = false;
@@ -81,10 +84,22 @@ void ChatServer::Start() {
 }
 
 void ChatServer::HandleClient(SOCKET clientSocket) {
-    cout << "欢迎 " << clientSocket << " 进入聊天室！" << endl;
+    //cout << "欢迎 " << clientSocket << " 进入聊天室！" << endl;
+    char username[100] = { 0 };
+
+    // 接收用户名
+    recv(clientSocket, username, sizeof(username), 0);
+    {
+        lock_guard<mutex> lock(clientsMutex);
+        clientUsernames[clientSocket] = username; // 存储用户名
+    }
+
+    cout << "欢迎 " << username << " 进入聊天室！" << endl;
+
 
     char welcomeMessage[100];
-    snprintf(welcomeMessage, sizeof(welcomeMessage), "欢迎 %d 进入聊天室!", clientSocket);
+    //snprintf(welcomeMessage, sizeof(welcomeMessage), "欢迎 %d 进入聊天室!", clientSocket);
+    snprintf(welcomeMessage, sizeof(welcomeMessage), "欢迎 %s 进入聊天室!", username);
     send(clientSocket, welcomeMessage, sizeof(welcomeMessage), 0);
 
     char buf[100] = { 0 };
@@ -95,7 +110,7 @@ void ChatServer::HandleClient(SOCKET clientSocket) {
         ret = recv(clientSocket, buf, sizeof(buf), 0);
 
         if (ret > 0) {
-            cout << clientSocket << " 说: " << buf << endl;
+            cout << username << " 说: " << buf << endl;
             BroadcastMessage(buf, clientSocket);
         }
     } while (ret > 0);
@@ -103,9 +118,10 @@ void ChatServer::HandleClient(SOCKET clientSocket) {
     {
         lock_guard<mutex> lock(clientsMutex);
         clients.erase(remove(clients.begin(), clients.end(), clientSocket), clients.end());
+        clientUsernames.erase(clientSocket); // 移除用户名
     }
 
-    cout << "用户 " << clientSocket << " 离开了聊天室" << endl;
+    cout << username << " 离开了聊天室" << endl;
     closesocket(clientSocket);
 }
 
@@ -114,7 +130,7 @@ void ChatServer::BroadcastMessage(const char* message, SOCKET senderSocket) {
     for (const SOCKET& otherClient : clients) {
         if (otherClient != senderSocket) {
             char msg[100];
-            snprintf(msg, sizeof(msg), "%d 说：%s", senderSocket, message);
+            snprintf(msg, sizeof(msg), "%s 说：%s", clientUsernames[senderSocket].c_str(), message);
             send(otherClient, msg, sizeof(msg), 0);
         }
     }

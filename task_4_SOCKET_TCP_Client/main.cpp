@@ -4,6 +4,7 @@
 #include <thread>
 #include <memory>
 #include <string>
+//2023211281-丁同勖-SOCKET_TCP_Client
 
 using namespace std;
 
@@ -17,6 +18,7 @@ public:
 
 private:
     static DWORD WINAPI RecvMessage(LPVOID lpThread);
+    void SendUsername();
     void SendMessage();
 
     SOCKET socket_;
@@ -43,35 +45,60 @@ ChatClient::ChatClient(const string& ipAddress, int port) : running_(true) {
         throw runtime_error("Connect error: " + to_string(GetLastError()));
     }
 
-    // 接收服务端的初始消息
-    char buf[100] = { 0 };
-    recv(socket_, buf, sizeof(buf), 0);
-    cout << "服务端消息: " << buf << endl;
+    SendUsername(); // 发送用户名
 
     // 启动接收线程
     HANDLE hThread = CreateThread(NULL, 0, RecvMessage, (LPVOID)socket_, 0, NULL);
+    if (hThread == NULL) {
+        throw runtime_error("创建接收线程失败: " + to_string(GetLastError()));
+    }
     CloseHandle(hThread);
 }
 
 ChatClient::~ChatClient() {
-    running_ = false;
-    closesocket(socket_);
-    WSACleanup();
+    running_ = false; // 设置为 false，以便停止接收消息
+    closesocket(socket_); // 关闭套接字
+    WSACleanup(); // 清理 Winsock
 }
 
 void ChatClient::Start() {
-    SendMessage();
+    SendMessage(); // 发送聊天消息
+}
+
+void ChatClient::SendUsername() {
+    std::string username;
+    std::cout << "请输入您的用户名: ";
+    std::getline(std::cin, username);
+
+    // 发送用户名到服务器
+    if (send(socket_, username.c_str(), username.size(), 0) == SOCKET_ERROR) {
+        std::cout << "发送用户名失败: " << GetLastError() << std::endl;
+        return;
+    }
+
+    // 接收服务器的确认消息
+    char buf[100] = { 0 };
+    recv(socket_, buf, sizeof(buf), 0);
+    std::cout << "服务器确认: " << buf << std::endl;
 }
 
 void ChatClient::SendMessage() {
-    char buf[100] = { 0 };
+    std::string message;
     while (running_) {
         cout << "请输入聊天内容: ";
-        cin.getline(buf, sizeof(buf)); // 使用getline来处理包含空格的输入
+        std::getline(std::cin, message); // 使用 getline 来处理包含空格的输入
 
-        if (send(socket_, buf, strlen(buf), 0) == SOCKET_ERROR) {
-            cout << "发送消息失败: " << GetLastError() << endl;
-            break;
+        if (!message.empty()) { // 确保不发送空消息
+            if (send(socket_, message.c_str(), message.size(), 0) == SOCKET_ERROR) {
+                std::cout << "发送消息失败: " << GetLastError() << std::endl;
+                break; // 如果发送失败，退出循环
+            }
+            else {
+                std::cout << "消息发送成功！" << std::endl;
+            }
+        }
+        else {
+            std::cout << "消息不能为空，请重新输入。" << std::endl;
         }
     }
 }
@@ -85,10 +112,11 @@ DWORD WINAPI ChatClient::RecvMessage(LPVOID lpThread) {
         ret = recv(s, buf, sizeof(buf), 0);
         if (ret > 0) {
             cout << "\n服务端消息: " << buf << endl;
+            cout << "请输入聊天内容："; // 提示用户输入
         }
         else {
             cout << "接收消息失败: " << GetLastError() << endl;
-            break;
+            break; // 连接关闭或出错
         }
     }
     return 0;
@@ -97,7 +125,7 @@ DWORD WINAPI ChatClient::RecvMessage(LPVOID lpThread) {
 int main() {
     try {
         ChatClient client("127.0.0.1", 1145);
-        client.Start();
+        client.Start(); // 开始客户端
     }
     catch (const exception& e) {
         cout << "错误: " << e.what() << endl;
