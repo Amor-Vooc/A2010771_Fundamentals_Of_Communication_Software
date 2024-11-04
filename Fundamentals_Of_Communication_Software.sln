@@ -9,7 +9,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "task_1_Signal_Analyze", "ta
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "task_2_Clustering_Algorithms", "task_2_Clustering_Algorithms\task_2_Clustering_Algorithms.vcxproj", "{CA6E9B82-021C-492B-9733-B58318E9DCA9}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "task_3_BMP_Rotation", "task_3_BMPRotation\task_3_BMPRotation.vcxproj", "{389B6A80-26A5-4A52-93D6-7C238EF0DD67}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "task_3_BMPRotation", "task_3_BMPRotation\task_3_BMPRotation.vcxproj", "{389B6A80-26A5-4A52-93D6-7C238EF0DD67}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "task_4_SOCKET_TCP_Server", "task_4_SOCKET_TCP_Server\task_4_SOCKET_TCP_Server.vcxproj", "{AFD22C4A-898A-4494-9449-72780E8791DE}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "task_4_SOCKET_TCP_Client", "task_4_SOCKET_TCP_Client\task_4_SOCKET_TCP_Client.vcxproj", "{11A680E0-4972-43AB-BD05-1D62929D7129}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +55,22 @@ Global
 		{389B6A80-26A5-4A52-93D6-7C238EF0DD67}.Release|x64.Build.0 = Release|x64
 		{389B6A80-26A5-4A52-93D6-7C238EF0DD67}.Release|x86.ActiveCfg = Release|Win32
 		{389B6A80-26A5-4A52-93D6-7C238EF0DD67}.Release|x86.Build.0 = Release|Win32
+		{AFD22C4A-898A-4494-9449-72780E8791DE}.Debug|x64.ActiveCfg = Debug|x64
+		{AFD22C4A-898A-4494-9449-72780E8791DE}.Debug|x64.Build.0 = Debug|x64
+		{AFD22C4A-898A-4494-9449-72780E8791DE}.Debug|x86.ActiveCfg = Debug|Win32
+		{AFD22C4A-898A-4494-9449-72780E8791DE}.Debug|x86.Build.0 = Debug|Win32
+		{AFD22C4A-898A-4494-9449-72780E8791DE}.Release|x64.ActiveCfg = Release|x64
+		{AFD22C4A-898A-4494-9449-72780E8791DE}.Release|x64.Build.0 = Release|x64
+		{AFD22C4A-898A-4494-9449-72780E8791DE}.Release|x86.ActiveCfg = Release|Win32
+		{AFD22C4A-898A-4494-9449-72780E8791DE}.Release|x86.Build.0 = Release|Win32
+		{11A680E0-4972-43AB-BD05-1D62929D7129}.Debug|x64.ActiveCfg = Debug|x64
+		{11A680E0-4972-43AB-BD05-1D62929D7129}.Debug|x64.Build.0 = Debug|x64
+		{11A680E0-4972-43AB-BD05-1D62929D7129}.Debug|x86.ActiveCfg = Debug|Win32
+		{11A680E0-4972-43AB-BD05-1D62929D7129}.Debug|x86.Build.0 = Debug|Win32
+		{11A680E0-4972-43AB-BD05-1D62929D7129}.Release|x64.ActiveCfg = Release|x64
+		{11A680E0-4972-43AB-BD05-1D62929D7129}.Release|x64.Build.0 = Release|x64
+		{11A680E0-4972-43AB-BD05-1D62929D7129}.Release|x86.ActiveCfg = Release|Win32
+		{11A680E0-4972-43AB-BD05-1D62929D7129}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
