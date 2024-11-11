@@ -122,9 +122,26 @@ DWORD WINAPI ChatClient::RecvMessage(LPVOID lpThread) {
     return 0;
 }
 
-int main() {
+int main(int argc, char* argv[]) {
+
+    string IP = "127.0.0.1";
+    int PORT = 3000;
+
+    if (argc == 1) {
+        cout << "未设置指定 IP 和端口号，默认使用 127.0.0.1:3000" << endl;
+    }
+    else if (argc == 2) {
+        cout << "IP : " << argv[1] << "，未设置指定端口号，默认使用 3000" << endl;
+        IP = argv[1];
+    }
+    else if (argc == 3) {
+        cout << "正在连接：" << argv[1] << ":" << argv[2] << endl;
+        IP = argv[1];
+        PORT = std::stoi(argv[2]); // 处理char* 转 int
+    }
+
     try {
-        ChatClient client("127.0.0.1", 1145);
+        ChatClient client(IP, PORT);
         client.Start(); // 开始客户端
     }
     catch (const exception& e) {

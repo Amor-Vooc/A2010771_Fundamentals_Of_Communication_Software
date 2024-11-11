@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <csignal>
 #include <map>
+#include <string>
 //2023211281-丁同勖-SOCKET_TCP_Server
 
 using namespace std;
@@ -15,7 +16,7 @@ using namespace std;
 
 class ChatServer {
 public:
-    ChatServer(int port);
+    ChatServer(string IP, int port);
     void Start();
     void Stop();
     static void SignalHandler(int signal);
@@ -36,7 +37,7 @@ private:
 
 ChatServer* ChatServer::serverInstance = nullptr;
 
-ChatServer::ChatServer(int port) {
+ChatServer::ChatServer(string IP, int port) {
     WSADATA wd;
     if (WSAStartup(MAKEWORD(2, 2), &wd) != 0) {
         PrintError("WSAStartup失败");
@@ -52,7 +53,7 @@ ChatServer::ChatServer(int port) {
     sockaddr_in addr;
     addr.sin_family = AF_INET;
     addr.sin_port = htons(port);
-    inet_pton(AF_INET, "127.0.0.1", &addr.sin_addr);
+    inet_pton(AF_INET, IP.c_str(), &addr.sin_addr);
 
     if (bind(serverSocket, (SOCKADDR*)&addr, sizeof(addr)) == SOCKET_ERROR) {
         PrintError("绑定失败");
@@ -154,8 +155,25 @@ void ChatServer::SignalHandler(int signal) {
     }
 }
 
-int main() {
-    ChatServer server(1145);
+int main(int argc, char* argv[]) {
+
+    string IP = "127.0.0.1";
+    int PORT = 3000;
+
+    if (argc ==1) {
+        cout << "未设置指定 IP 和端口号，默认使用 127.0.0.1:3000" << endl;
+    }
+    else if (argc == 2) {
+        cout << "IP : " << argv[1] << "，未设置指定端口号，默认使用 3000" << endl;
+        IP = argv[1];
+    }
+    else if (argc == 3) {
+        cout << "正在连接：" << argv[1] << ":" << argv[2] << endl;
+        IP = argv[1];
+        PORT = std::stoi(argv[2]); // 处理char* 转 int
+    }
+
+    ChatServer server(IP, PORT);
     ChatServer::serverInstance = &server;
 
     // 设置信号处理
