@@ -125,6 +125,7 @@ void ChatServer::HandleClient(SOCKET clientSocket) {
     }
 
     cout << username << " 离开了聊天室" << endl;
+    BroadcastMessage(username, clientSocket, 2);
     closesocket(clientSocket);
 }
 
@@ -133,11 +134,14 @@ void ChatServer::BroadcastMessage(const char* message, SOCKET senderSocket, int 
     for (const SOCKET& otherClient : clients) {
         if (otherClient != senderSocket) {
             char msg[100];
-            if (type) {
+            if (type == 1) {
                 snprintf(msg, sizeof(msg), "%s 说：%s", clientUsernames[senderSocket].c_str(), message);
             }
+            else if (type == 2) {
+                snprintf(msg, sizeof(msg), "服务器消息：%s 离开了聊天室", message);
+            }
             else {
-                snprintf(msg, sizeof(msg), "新成员加入！%s", message);
+                snprintf(msg, sizeof(msg), "服务器消息：新成员加入！%s", message);
             }
             send(otherClient, msg, sizeof(msg), 0);
         }

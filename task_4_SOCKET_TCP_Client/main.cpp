@@ -70,8 +70,17 @@ void ChatClient::Start() {
 
 void ChatClient::SendUsername() {
     std::string username;
-    std::cout << "请输入您的用户名: ";
-    std::getline(std::cin, username);
+    int space = 1;
+    while(space){ // 检查用户名是否有空格
+        std::cout << "请输入您的用户名: ";
+        std::getline(std::cin, username);
+        if (username.find(' ') == string::npos) {
+            space = 0;
+        }
+        else {
+            cout << "用户名不能含有空格，请重新输入！" << endl;
+        }
+    }
 
     // 发送用户名到服务器
     if (send(socket_, username.c_str(), username.size(), 0) == SOCKET_ERROR) {
