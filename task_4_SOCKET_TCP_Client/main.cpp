@@ -4,6 +4,7 @@
 #include <thread>
 #include <memory>
 #include <string>
+#include <windows.h>  // 用于改变控制台颜色
 //2023211281-丁同勖-SOCKET_TCP_Client
 
 using namespace std;
@@ -20,6 +21,8 @@ private:
     static DWORD WINAPI RecvMessage(LPVOID lpThread);
     void SendUsername();
     void SendMessage();
+    static void SetConsoleColor(const string& colorName);  // 设置控制台颜色为静态函数
+    static void ResetConsoleColor();  // 重置控制台颜色为静态函数
 
     SOCKET socket_;
     bool running_;
@@ -80,25 +83,34 @@ void ChatClient::SendUsername() {
     char buf[100] = { 0 };
     recv(socket_, buf, sizeof(buf), 0);
     std::cout << "服务器确认: " << buf << std::endl;
+    std::cout << "Tip：#颜色 [消息] 可以改变消息颜色。支持的颜色有红色、绿色、蓝色、黄色、洋红和青色。\n" << std::endl;
 }
 
 void ChatClient::SendMessage() {
     std::string message;
     while (running_) {
-        cout << "请输入聊天内容: ";
+        cout << "请输入聊天内容：";
         std::getline(std::cin, message); // 使用 getline 来处理包含空格的输入
 
         if (!message.empty()) { // 确保不发送空消息
-            if (send(socket_, message.c_str(), message.size(), 0) == SOCKET_ERROR) {
-                std::cout << "发送消息失败: " << GetLastError() << std::endl;
-                break; // 如果发送失败，退出循环
+
+            size_t spacePos = string::npos;
+            spacePos = message.find(' '); // 获取颜色后的空格位置
+            if (message[spacePos + 1] != '\0') { // 检查含颜色的输入是否为空
+                if (send(socket_, message.c_str(), message.size(), 0) == SOCKET_ERROR) {
+                    cout << "发送消息失败: " << GetLastError() << endl;
+                    break;
+                }
+                else {
+                    cout << "消息发送成功！" << endl;
+                }
             }
             else {
-                std::cout << "消息发送成功！" << std::endl;
+                cout << "消息不能为空，请重新输入。" << endl;
             }
         }
         else {
-            std::cout << "消息不能为空，请重新输入。" << std::endl;
+            cout << "消息不能为空，请重新输入。" << endl;
         }
     }
 }
@@ -110,9 +122,47 @@ DWORD WINAPI ChatClient::RecvMessage(LPVOID lpThread) {
 
     while (true) {
         ret = recv(s, buf, sizeof(buf), 0);
+
         if (ret > 0) {
-            cout << "\n服务端消息: " << buf << endl;
+            string receivedMessage(buf, ret);
+
+            // 清除未使用的输入提示并打印消息
+            cout << "\033[1K\r";
+
+            // 提取颜色和消息内容
+            int count = 0;
+            size_t spacePos1 = string::npos;
+            size_t spacePos2 = string::npos;
+            size_t end = string::npos;
+            size_t startPos = 0;
+
+            spacePos1 = receivedMessage.find(' ', startPos); // 获取用户名后的空格位置
+            startPos = spacePos1 + 1; // 更新查找位置，防止重复查找
+
+            spacePos2 = receivedMessage.find(' ', startPos); // 获取消息前的空格位置
+            startPos = spacePos2 + 1; // 更新查找位置，防止重复查找
+
+            end = receivedMessage.find('\0', startPos); // 获取消息结尾
+
+            if (receivedMessage[spacePos1 + 5] == '#' && spacePos2 != string::npos) {
+                string name= receivedMessage.substr(0, spacePos1 + 5); // 提取发送者用户名
+                string colorCode = receivedMessage.substr(spacePos1+5, 5); // 识别颜色
+                string msgContent = receivedMessage.substr(spacePos2 + 1, end - spacePos2 + 1); // 提取消息内容
+
+                // 设置颜色
+                SetConsoleColor(colorCode);
+                cout << name;
+                cout << msgContent << endl;
+
+                // 重置颜色
+                ResetConsoleColor();
+            }
+            else {
+                cout << buf << endl;
+            }
+
             cout << "请输入聊天内容："; // 提示用户输入
+
         }
         else {
             cout << "接收消息失败: " << GetLastError() << endl;
@@ -122,7 +172,40 @@ DWORD WINAPI ChatClient::RecvMessage(LPVOID lpThread) {
     return 0;
 }
 
+void ChatClient::SetConsoleColor(const string& colorCode) {
+    // 根据颜色代码设置控制台颜色
+    if (colorCode == "#红色") {
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | FOREGROUND_INTENSITY);
+    }
+    else if (colorCode == "#绿色") {
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_GREEN | FOREGROUND_INTENSITY);
+    }
+    else if (colorCode == "#蓝色") {
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_BLUE | FOREGROUND_INTENSITY);
+    }
+    else if (colorCode == "#黄色") {
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY);
+    }
+    else if (colorCode == "#洋红") {
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | FOREGROUND_BLUE | FOREGROUND_INTENSITY);
+    }
+    else if (colorCode == "#青色") {
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_INTENSITY);
+    }
+    else {
+        // 默认颜色
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+    }
+}
+
+void ChatClient::ResetConsoleColor() {
+    // 重置为默认颜色
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+}
+
 int main(int argc, char* argv[]) {
+
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
 
     string IP = "127.0.0.1";
     int PORT = 3000;

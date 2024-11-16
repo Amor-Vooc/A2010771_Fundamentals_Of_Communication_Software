@@ -16,7 +16,7 @@ using namespace std;
 
 class ChatServer {
 public:
-    ChatServer(string IP, int port);
+    ChatServer(const string& IP, int port);
     void Start();
     void Stop();
     static void SignalHandler(int signal);
@@ -24,7 +24,7 @@ public:
 
 private:
     void HandleClient(SOCKET clientSocket);
-    void BroadcastMessage(const char* message, SOCKET senderSocket);
+    void BroadcastMessage(const char* message, SOCKET senderSocket, int type);
     void PrintError(const string& message);
 
     vector<SOCKET> clients; // 存储客户端套接字
@@ -37,7 +37,7 @@ private:
 
 ChatServer* ChatServer::serverInstance = nullptr;
 
-ChatServer::ChatServer(string IP, int port) {
+ChatServer::ChatServer(const string& IP, int port) {
     WSADATA wd;
     if (WSAStartup(MAKEWORD(2, 2), &wd) != 0) {
         PrintError("WSAStartup失败");
@@ -102,6 +102,8 @@ void ChatServer::HandleClient(SOCKET clientSocket) {
     //snprintf(welcomeMessage, sizeof(welcomeMessage), "欢迎 %d 进入聊天室!", clientSocket);
     snprintf(welcomeMessage, sizeof(welcomeMessage), "欢迎 %s 进入聊天室!", username);
     send(clientSocket, welcomeMessage, sizeof(welcomeMessage), 0);
+    BroadcastMessage(welcomeMessage, clientSocket, 0);
+    
 
     char buf[100] = { 0 };
     int ret;
@@ -111,8 +113,8 @@ void ChatServer::HandleClient(SOCKET clientSocket) {
         ret = recv(clientSocket, buf, sizeof(buf), 0);
 
         if (ret > 0) {
-            cout << username << " 说: " << buf << endl;
-            BroadcastMessage(buf, clientSocket);
+            cout << username << " 说：" << buf << endl;
+            BroadcastMessage(buf, clientSocket, 1);
         }
     } while (ret > 0);
 
@@ -126,12 +128,17 @@ void ChatServer::HandleClient(SOCKET clientSocket) {
     closesocket(clientSocket);
 }
 
-void ChatServer::BroadcastMessage(const char* message, SOCKET senderSocket) {
+void ChatServer::BroadcastMessage(const char* message, SOCKET senderSocket, int type) {
     lock_guard<mutex> lock(clientsMutex);
     for (const SOCKET& otherClient : clients) {
         if (otherClient != senderSocket) {
             char msg[100];
-            snprintf(msg, sizeof(msg), "%s 说：%s", clientUsernames[senderSocket].c_str(), message);
+            if (type) {
+                snprintf(msg, sizeof(msg), "%s 说：%s", clientUsernames[senderSocket].c_str(), message);
+            }
+            else {
+                snprintf(msg, sizeof(msg), "新成员加入！%s", message);
+            }
             send(otherClient, msg, sizeof(msg), 0);
         }
     }
