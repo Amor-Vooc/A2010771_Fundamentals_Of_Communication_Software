@@ -15,6 +15,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "task_4_SOCKET_TCP_Server", 
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "task_4_SOCKET_TCP_Client", "task_4_SOCKET_TCP_Client\task_4_SOCKET_TCP_Client.vcxproj", "{11A680E0-4972-43AB-BD05-1D62929D7129}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "task_5_Link_State_Routing_Protocol", "task_5_Link_State_Routing_Protocol\task_5_Link_State_Routing_Protocol.vcxproj", "{DB420C26-17BE-459F-8A08-E5491F6B5959}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -71,6 +73,14 @@ Global
 		{11A680E0-4972-43AB-BD05-1D62929D7129}.Release|x64.Build.0 = Release|x64
 		{11A680E0-4972-43AB-BD05-1D62929D7129}.Release|x86.ActiveCfg = Release|Win32
 		{11A680E0-4972-43AB-BD05-1D62929D7129}.Release|x86.Build.0 = Release|Win32
+		{DB420C26-17BE-459F-8A08-E5491F6B5959}.Debug|x64.ActiveCfg = Debug|x64
+		{DB420C26-17BE-459F-8A08-E5491F6B5959}.Debug|x64.Build.0 = Debug|x64
+		{DB420C26-17BE-459F-8A08-E5491F6B5959}.Debug|x86.ActiveCfg = Debug|Win32
+		{DB420C26-17BE-459F-8A08-E5491F6B5959}.Debug|x86.Build.0 = Debug|Win32
+		{DB420C26-17BE-459F-8A08-E5491F6B5959}.Release|x64.ActiveCfg = Release|x64
+		{DB420C26-17BE-459F-8A08-E5491F6B5959}.Release|x64.Build.0 = Release|x64
+		{DB420C26-17BE-459F-8A08-E5491F6B5959}.Release|x86.ActiveCfg = Release|Win32
+		{DB420C26-17BE-459F-8A08-E5491F6B5959}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
