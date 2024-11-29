@@ -127,7 +127,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="main.cpp">
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\task_4_SOCKET_TCP_Server\课程资料\通信软件基础b-5.0-socket基础_7e3e3763d0d5c8537d1e.pdf" />
